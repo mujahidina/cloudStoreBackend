@@ -162,7 +162,7 @@ class UserByID(Resource):
 api.add_resource(UserByID,"/users/<int:id>")     
 
 class Folders(Resource):
-    # @jwt_required()
+    
     def get(self):
         folders = [folder.to_dict(only=("id","folder_name","user_id","user.username")) for folder in Folder.query.all()]       
         
