@@ -5,10 +5,9 @@ from sqlalchemy_serializer import SerializerMixin
 from flask_migrate import Migrate
 from sqlalchemy import MetaData
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cloudstore.db'
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+metadata = MetaData()
+
+db = SQLAlchemy(metadata=metadata)
 
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
