@@ -31,7 +31,7 @@ bcrypt = Bcrypt(app)
 class UserRegister(Resource):
     @cross_origin()
     def post (self):
-        data = request.get_json()[0]
+        data = request.get_json()
         print(data)
         username = data.get("username")
         email = data.get("email")
@@ -78,7 +78,7 @@ api.add_resource(UserRegister,"/user/register")
 
 class UserLogin(Resource):
     def post(self):
-        data = request.get_json()[0]
+        data = request.get_json()
         print(data)
         
         email = data.get("email")
@@ -136,7 +136,7 @@ class UserByID(Resource):
 
     def patch(self,id):
 
-        data = request.get_json()[0]
+        data = request.get_json()
 
         user = User.query.filter(User.id==id).first()
 
@@ -169,7 +169,7 @@ class Folders(Resource):
         return make_response(folders,200)
     
     def post(self):
-        data =  request.get_json()[0]
+        data =  request.get_json()
         
        
         
@@ -202,7 +202,7 @@ class FolderByID(Resource):
         
     def patch(self,id):
 
-        data = request.get_json()[0]
+        data = request.get_json()
 
         folder = Folder.query.filter(Folder.id==id).first()
 
@@ -286,7 +286,7 @@ class Files(Resource):
         return make_response(files,200)
     
     def post(self):
-        data = request.get_json()[0]
+        data = request.get_json()
         
         # Handle file upload to Cloudinary
         uploaded_file = upload(data.get('file'))  # Assuming the file is in the 'file' field of the JSON payload
@@ -325,7 +325,7 @@ class FileByID(Resource):
         
     def patch(self,id):
 
-        data = request.get_json()[0]
+        data = request.get_json()
 
         file = File.query.filter(File.id==id).first()
 
@@ -371,7 +371,7 @@ class Shares(Resource):
         return make_response(shares,200)
     
     def post(self):
-        data =  request.get_json()[0]
+        data =  request.get_json()
         
        
         
@@ -404,7 +404,7 @@ class ShareByID(Resource):
         
     def patch(self,id):
 
-        data = request.get_json()[0]
+        data = request.get_json()
 
         share = Share.query.filter(Share.id==id).first()
 
