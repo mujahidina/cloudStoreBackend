@@ -36,6 +36,7 @@ class UserRegister(Resource):
         username = data.get("username")
         email = data.get("email")
         password = str(data.get("password"))
+        image_url = data.get("image_url")
         
         
         print(f"This is {data}")
@@ -61,6 +62,7 @@ class UserRegister(Resource):
            username = username,
            email = email,
            password = hashed_password,
+           image_url = image_url
             
         )
         db.session.add(new_user)
@@ -120,7 +122,7 @@ api.add_resource(Logout,"/user/logout")
 
 class Users(Resource):
     def get(self):
-        users = [user.to_dict(only=('id', 'username', 'email',)) for user in User.query.all()]
+        users = [user.to_dict(only=('id', 'username', 'email',"image_url")) for user in User.query.all()]
         print("im a user", users)
         return make_response(jsonify(users),200)
     
@@ -132,7 +134,7 @@ class UserByID(Resource):
         user = User.query.filter(User.id==id).first()
 
         if user:
-            return make_response(jsonify(user.to_dict(only=("id","username","email",))),200) 
+            return make_response(jsonify(user.to_dict(only=("id","username","email","image_url"))),200) 
 
     def patch(self,id):
 

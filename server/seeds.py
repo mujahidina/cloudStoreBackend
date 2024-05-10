@@ -12,8 +12,8 @@ def seed_data():
     db.session.commit() 
          
     print('creating users....')
-    user1 = User(username='user1', email='user1@gmail.com', password='password1')
-    user2 = User(username='user2', email='user2@gmail.com', password='password2')
+    user1 = User(username='user1', email='user1@gmail.com', password='password1',image_url="https://i.scdn.co/image/ab6761610000e5ebebfd16a3bca87c31c1e20576")
+    user2 = User(username='user2', email='user2@gmail.com', password='password2',image_url = "https://www.essence.com/wp-content/uploads/2022/12/GettyImages-1428769836-scaled.jpg")
     db.session.add(user1)
     db.session.add(user2)
     db.session.commit()
