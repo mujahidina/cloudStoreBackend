@@ -143,7 +143,7 @@ class UserByID(Resource):
         user = User.query.filter(User.id==id).first()
 
         for attr in data:
-            setattr(user,attr,data.get(attr))
+            setattr(user,attr,data.get(attr)) 
 
         db.session.add(user)
         db.session.commit()
@@ -161,16 +161,10 @@ class UserByID(Resource):
         else:
             return make_response(jsonify({"error":"User not found"}),404) 
         
-api.add_resource(UserByID,"/users/<int:id>")     
+api.add_resource(UserByID,"/users/<int:id>")    
 
 class Folders(Resource):
-    
-    def get(self):
-        folders = [folder.to_dict(only=("id","folder_name","user_id","user.username")) for folder in Folder.query.all()]       
-        
-        return make_response(folders,200)
-    
-    def post(self):
+     def post(self):
         data =  request.get_json()
         
        
@@ -189,8 +183,17 @@ class Folders(Resource):
             return make_response(jsonify({"error":["validation errors"]}))    
         
         return make_response(new_folder.to_dict(only=("parent_folder_id","user_id","user.username","folder_name")),201)
+api.add_resource(Folders,"/folders")     
+
+class FolderByUser(Resource):
     
-api.add_resource(Folders,"/folders")
+    def get(self,id):
+        folders = [folder.to_dict(only=("id","folder_name","user_id","user.username")) for folder in Folder.query.filter(Folder.user_id==id)]       
+        
+        return make_response(folders,200)
+    
+   
+api.add_resource(FolderByUser,"/foldersuser/<int:id>")
 
 class FolderByID(Resource):
     
@@ -282,10 +285,7 @@ api.add_resource(FolderByID,"/folders/<int:id>")
 # api.add_resource(FolderByID,"/folders/<int:id>")
 
 class Files(Resource):
-    def get(self):
-        files = [files.to_dict(only=("id","filename","file_type","size","path","user.username")) for files in File.query.all()]       
-        
-        return make_response(files,200)
+    
     
     def post(self):
         data = request.get_json()
@@ -314,6 +314,25 @@ class Files(Resource):
     
     
 api.add_resource(Files,"/files")  
+
+class FileByFolder(Resource):
+    def get(self,id):
+        files = [files.to_dict(only=("id","filename","file_type","size","path","user.username")) for files in File.query.filter(File.folder_id==id)]
+               
+        
+        return make_response(files,200)
+    
+api.add_resource(FileByFolder,"/filefolder/<int:id>")    
+
+class FileByUser(Resource):
+    def get(self,id):
+        files = [files.to_dict(only=("id","filename","file_type","size","path","user.username")) for files in File.query.filter(File.user_id==id)]
+               
+        
+        return make_response(files,200)
+    
+api.add_resource(FileByUser,"/fileuser/<int:id>")    
+    
 
 class FileByID(Resource):
     
