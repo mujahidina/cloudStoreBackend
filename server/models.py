@@ -5,10 +5,9 @@ from sqlalchemy_serializer import SerializerMixin
 from flask_migrate import Migrate
 from sqlalchemy import MetaData
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cloudstore.db'
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+metadata = MetaData()
+
+db = SQLAlchemy(metadata=metadata)
 
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
@@ -16,6 +15,7 @@ class User(db.Model, SerializerMixin):
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
+    image_url = db.Column(db.String(100))
 
     @validates('password')
     def validate_password(self, key, password):
@@ -44,7 +44,7 @@ class File(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(255), nullable=False)
     file_type = db.Column(db.String(50), nullable=False)
-    size = db.Column(db.Integer, nullable=False)6
+    size = db.Column(db.Integer, nullable=False)
     path = db.Column(db.String(255), nullable=False)
     folder_id = db.Column(db.Integer, db.ForeignKey('folders.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
