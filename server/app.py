@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, make_response
 from flask_migrate import Migrate
 from flask_restful import Resource, Api, reqparse
-from models import db, User, File, Folder,Share
+from models import db, User, File, Folder,Share,StarredItem,TrashItem
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity, create_access_token,unset_jwt_cookies
 from flask_cors import CORS, cross_origin
 from flask_bcrypt import Bcrypt
@@ -445,14 +445,93 @@ class ShareByID(Resource):
             db.session.commit()
             return make_response("",204)
         else:
-            return make_response(jsonify({"error":"User not found"}),404)
+            return make_response(jsonify({"error":"Shared file not found"}),404)
         
         
 api.add_resource(ShareByID,"/shares/<int:id>")     
 
 
+class StarredItems(Resource):
+    def get(self):
+        starred_items= [starred.to_dict() for starred in StarredItem.query.all()]
+        return make_response(starred_items,200)
+    
+    def post(self):
+        data =  request.get_json()[0]
+        
+       
+        
+        try:
+            starred_item = StarredItem(
+                file_id = data.get("file_id"),
+                item_type = data.get("item_type"),
+                user_id = data.get("user_id")
+                
+            )  
+            db.session.add(starred_item)
+            db.session.commit() 
+            
+        except ValueError:
+            return make_response(jsonify({"error":["validation errors"]}))    
+        
+        return make_response(starred_item.to_dict(only=("id","file_id","item_type","user_id")),201)
+    
+api.add_resource(StarredItems,"/starreditems")   
+
+class StarredItemByID(Resource):
+   def delete(self,id):
+        starred_item = StarredItem.query.filter(StarredItem.id==id).first()
+
+        if starred_item:
+            db.session.delete(starred_item)
+            db.session.commit()
+            return make_response("",204)
+        else:
+            return make_response(jsonify({"error":"Item not found"}),404)
+        
+api.add_resource(StarredItemByID,"/starreditem/<int:id>")    
+
+class TrashItems(Resource):
+    def get(self):
+        trash_item = [trash.to_dict() for trash in TrashItem.query.all()]
+        return make_response(trash_item,200)   
+    
+    def post(self):
+        data =  request.get_json()[0]
+        
+       
+        
+        try:
+            trash_item = TrashItem(
+                file_id = data.get("file_id"),
+                item_type = data.get("item_type"),
+                user_id = data.get("user_id")
+                
+            )  
+            db.session.add(trash_item)
+            db.session.commit() 
+            
+        except ValueError:
+            return make_response(jsonify({"error":["validation errors"]}))    
+        
+        return make_response(trash_item.to_dict(only=("id","file_id","item_type","user_id")),201)
+
+api.add_resource(TrashItems,"/trashitems")               
         
         
+class TrashItemByID(Resource):
+    def delete(self,id):
+        trash_item = TrashItem.query.filter(TrashItem.id==id).first()
+
+        if trash_item:
+            db.session.delete(trash_item)
+            db.session.commit()
+            return make_response("",204)
+        else:
+            return make_response(jsonify({"error":"Item not found"}),404)
+        
+api.add_resource(TrashItemByID,"/trashitem/<int:id>")
+            
         
         
                 

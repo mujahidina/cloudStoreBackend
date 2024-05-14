@@ -65,7 +65,7 @@ class Share(db.Model, SerializerMixin):
     file = db.relationship('File', foreign_keys=[file_id])
 
 
-class StarredItem(db.Model):
+class StarredItem(db.Model,SerializerMixin):
     __tablename__ = 'starred_items'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -73,7 +73,7 @@ class StarredItem(db.Model):
     item_type = db.Column(db.String(50), nullable=False) 
     user_id = db.Column(db.Integer, nullable=False)   
 
-class TrashItem(db.Model):
+class TrashItem(db.Model,SerializerMixin):
     __tablename__ = 'trash_items'
     
     id = db.Column(db.Integer, primary_key=True)
