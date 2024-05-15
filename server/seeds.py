@@ -1,6 +1,7 @@
 from models import User, Folder, File
 from app import app, db
 
+
 def seed_data():
    with app.app_context():
 
