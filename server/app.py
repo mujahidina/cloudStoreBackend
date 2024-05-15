@@ -457,7 +457,7 @@ class StarredItems(Resource):
         return make_response(starred_items,200)
     
     def post(self):
-        data =  request.get_json()[0]
+        data =  request.get_json()
         
        
         
@@ -497,7 +497,7 @@ class TrashItems(Resource):
         return make_response(trash_item,200)   
     
     def post(self):
-        data =  request.get_json()[0]
+        data =  request.get_json()
         
        
         
