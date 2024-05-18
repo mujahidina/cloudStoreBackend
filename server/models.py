@@ -69,7 +69,8 @@ class StarredItem(db.Model,SerializerMixin):
     __tablename__ = 'starred_items'
 
     id = db.Column(db.Integer, primary_key=True)
-    file_id = db.Column(db.Integer, db.ForeignKey('files.id'), nullable=False)
+    file_id = db.Column(db.Integer, db.ForeignKey('files.id'))
+    folder_id = db.Column(db.Integer, db.ForeignKey('folders.id'))
     item_type = db.Column(db.String(50), nullable=False) 
     user_id = db.Column(db.Integer, nullable=False)   
 
@@ -77,7 +78,8 @@ class TrashItem(db.Model,SerializerMixin):
     __tablename__ = 'trash_items'
     
     id = db.Column(db.Integer, primary_key=True)
-    file_id = db.Column(db.Integer, db.ForeignKey('files.id'), nullable=False)
+    file_id = db.Column(db.Integer, db.ForeignKey('files.id'))
+    folder_id = db.Column(db.Integer, db.ForeignKey('folders.id'))
     item_type = db.Column(db.String(50), nullable=False)  
     user_id = db.Column(db.Integer, nullable=False)  
 

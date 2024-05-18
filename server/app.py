@@ -464,6 +464,7 @@ class StarredItems(Resource):
         try:
             starred_item = StarredItem(
                 file_id = data.get("file_id"),
+                folder_id = data.get("folder_id"),
                 item_type = data.get("item_type"),
                 user_id = data.get("user_id")
                 
@@ -504,6 +505,7 @@ class TrashItems(Resource):
         try:
             trash_item = TrashItem(
                 file_id = data.get("file_id"),
+                folder_id = data.get("folder_id"),
                 item_type = data.get("item_type"),
                 user_id = data.get("user_id")
                 
