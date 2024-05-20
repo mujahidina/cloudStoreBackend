@@ -101,7 +101,9 @@ class UserLogin(Resource):
         return jsonify({
             "id": user.id,
             "email": user.email,
-            "access_token": user.access_token, 
+            "access_token": user.access_token,
+            "username": user.username,
+            "image_url":user.email_url
         
         })
         
