@@ -35,6 +35,7 @@ class Folder(db.Model, SerializerMixin):
     folder_name = db.Column(db.String(100), nullable=False)
     parent_folder_id = db.Column(db.Integer, db.ForeignKey('folders.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    is_delete = db.Column(db.Boolean,default = False)
     user = db.relationship('User', backref=db.backref('folders', lazy=True))
     files = db.relationship('File', backref='folder', lazy=True, cascade="all, delete-orphan")
     subfolders = db.relationship('Folder', backref=db.backref('parent_folder', remote_side=[id]), cascade="all, delete-orphan")
@@ -48,6 +49,7 @@ class File(db.Model, SerializerMixin):
     path = db.Column(db.String(255), nullable=False)
     folder_id = db.Column(db.Integer, db.ForeignKey('folders.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    is_delete = db.Column(db.Boolean,default = False)
     user = db.relationship('User', backref=db.backref('files', lazy=True))
 
     user = db.relationship('User', foreign_keys=[user_id])

@@ -188,14 +188,22 @@ class Folders(Resource):
 api.add_resource(Folders,"/folders")     
 
 class FolderByUser(Resource):
+    def get(self, id):
+        folders = [folder.to_dict(only=("id", "folder_name", "user_id", "user.username")) for folder in Folder.query.filter(Folder.user_id == id,Folder.is_delete == 0)]
+
+        return make_response(folders, 200)
     
-    def get(self,id):
-        folders = [folder.to_dict(only=("id","folder_name","user_id","user.username")) for folder in Folder.query.filter(Folder.user_id==id)]       
-        
-        return make_response(folders,200)
     
-   
-api.add_resource(FolderByUser,"/foldersuser/<int:id>")
+
+api.add_resource(FolderByUser, "/foldersuser/<int:id>")
+
+class TrashFolders(Resource):
+    def get(self, id):
+        folders = [folder.to_dict(only=("id", "folder_name", "user_id", "user.username")) for folder in Folder.query.filter(Folder.user_id == id,Folder.is_delete == 1)]
+
+        return make_response(folders, 200)
+
+api.add_resource(TrashFolders, "/trashfolders/<int:id>")
 
 class FolderByID(Resource):
     
@@ -327,13 +335,20 @@ class FileByFolder(Resource):
 api.add_resource(FileByFolder,"/filefolder/<int:id>")    
 
 class FileByUser(Resource):
-    def get(self,id):
-        files = [files.to_dict(only=("id","filename","file_type","size","path","user.username")) for files in File.query.filter(File.user_id==id)]
-               
-        
-        return make_response(files,200)
-    
-api.add_resource(FileByUser,"/fileuser/<int:id>")    
+    def get(self, id):
+        files = [file.to_dict(only=("id", "filename", "file_type", "size", "path", "user.username")) for file in File.query.filter(File.user_id == id,File.is_delete==0)]
+
+        return make_response(files, 200)
+
+api.add_resource(FileByUser, "/fileuser/<int:id>")
+
+class TrashFiles(Resource):
+    def get(self, id):
+        files = [file.to_dict(only=("id", "filename", "file_type", "size", "path", "user.username")) for file in File.query.filter(File.user_id == id,File.is_delete==1)]
+
+        return make_response(files, 200)
+
+api.add_resource(TrashFiles, "/trashfiles/<int:id>")   
     
  
 class FileByID(Resource):
