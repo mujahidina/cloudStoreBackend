@@ -103,7 +103,7 @@ class UserLogin(Resource):
             "email": user.email,
             "access_token": user.access_token,
             "username": user.username,
-            "image_url":user.email_url
+            "image_url":user.image_url
         
         })
         
