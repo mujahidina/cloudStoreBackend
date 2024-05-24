@@ -405,7 +405,7 @@ api.add_resource(FileByID,"/files/<int:id>")
         
 class Shares(Resource):
     def get(self):
-        shares = [share.to_dict(only=("file.size","file_id","share_type","user_id","shared_with_user_id","user.username")) for share in Share.query.all()]
+        shares = [share.to_dict(only=("file.size","file_id","share_type","user_id","shared_with_user_email","user.username")) for share in Share.query.all()]
         return make_response(shares,200)
     
     def post(self):
@@ -417,7 +417,7 @@ class Shares(Resource):
             new_share = Share(
                 share_type= data.get('share_type'),
                 user_id = data.get('user_id'),
-                shared_with_user_id = data.get("shared_with_user_id"),
+                shared_with_user_email= data.get("shared_with_user_email"),
                 file_id = data.get("file_id")
                 
             )  
@@ -427,7 +427,7 @@ class Shares(Resource):
         except ValueError:
             return make_response(jsonify({"error":["validation errors"]}))    
         
-        return make_response(new_share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_id","user.username")),201)
+        return make_response(new_share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_email","user.username")),201)
     
 api.add_resource(Shares,"/shares")
 
@@ -436,7 +436,7 @@ class ShareByID(Resource):
         share = Share.query.filter(Share.id==id).first()
 
         if share:
-            return make_response(jsonify(share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_id","user.username"))),200)
+            return make_response(jsonify(share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_email","user.username"))),200)
         else:
             return make_response(jsonify({"error":"Shares files not found"}))
         
@@ -452,7 +452,7 @@ class ShareByID(Resource):
         db.session.add(share)
         db.session.commit()
 
-        return make_response(share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_id","user.username")),200) 
+        return make_response(share.to_dict(only=("file.size","file.path","file_id","share_type","user_id","shared_with_user_email","user.username")),200) 
     
     def delete(self,id):
         share = Share.query.filter(Share.id==id).first()

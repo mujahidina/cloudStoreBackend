@@ -64,9 +64,9 @@ class Share(db.Model, SerializerMixin):
     share_type = db.Column(db.String(50), nullable=False)
     file_id = db.Column(db.Integer, db.ForeignKey('files.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    shared_with_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    shared_with_user_email = db.Column(db.String, db.ForeignKey('users.email'), nullable=False)
     user = db.relationship('User', foreign_keys=[user_id])
-    shared_with_user = db.relationship('User', foreign_keys=[shared_with_user_id])
+    shared_with_user = db.relationship('User', foreign_keys=[shared_with_user_email])
     file = db.relationship('File', foreign_keys=[file_id])
 
 
