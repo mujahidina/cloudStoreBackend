@@ -197,6 +197,18 @@ class FolderByUser(Resource):
 
 api.add_resource(FolderByUser, "/foldersuser/<int:id>")
 
+class FolderByFolderName(Resource):
+   def get(self,name):
+        folder = Folder.query.filter(Folder.folder_name==name).first()
+
+        if folder:
+            return make_response(jsonify(folder.to_dict(only=("id","folder_name","user_id","user.username"))),200)
+        else:
+            return make_response(jsonify({"error":"Folder not found"}))
+        
+        
+api.add_resource(FolderByFolderName,"/folderbyfoldername/<string:name>")      
+
 class TrashFolders(Resource):
     def get(self, id):
         folders = [folder.to_dict(only=("id", "folder_name", "user_id", "user.username")) for folder in Folder.query.filter(Folder.user_id == id,Folder.is_delete == 1)]
@@ -325,6 +337,9 @@ class Files(Resource):
     
 api.add_resource(Files,"/files")  
 
+
+
+
 class FileByFolder(Resource):
     def get(self,id):
         files = [files.to_dict(only=("id","filename","file_type","size","path","user.username")) for files in File.query.filter(File.folder_id==id)]
@@ -341,6 +356,51 @@ class FileByUser(Resource):
         return make_response(files, 200)
 
 api.add_resource(FileByUser, "/fileuser/<int:id>")
+
+class FileByFileName(Resource):
+    def get(self,name):
+        file = File.query.filter(File.filename==name).first()
+
+        if file:
+            return make_response(jsonify(file.to_dict(only=("id","filename","file_type","size","path","user.username"))),200)
+        else:
+            return make_response(jsonify({"error":"Folder not found"}))
+        
+api.add_resource(FileByFileName,"/filebyfilename/<string:name>")        
+    
+
+class MoveToTrash(Resource):
+    def put(self, id):
+        file = File.query.get(id)
+        if not file:
+            return {"error": "File not found"}, 404
+
+        file.is_delete = True
+
+        try:
+            db.session.commit()
+            return {"message": "File moved to trash successfully"}, 200
+        except Exception as e:
+            db.session.rollback()
+            return {"error": str(e)}, 500
+
+api.add_resource(MoveToTrash, '/move-to-trash/<int:id>')
+
+
+
+class DeleteFile(Resource):
+    def delete(self, id):
+        file = File.query.get(id)
+        if not file:
+            return {"error": "File not found"}, 404
+
+        db.session.delete(file)
+        db.session.commit()
+        return {"message": "File deleted successfully"}, 200
+
+api.add_resource(DeleteFile, '/deletefiles/<int:id>')
+
+
 
 class TrashFiles(Resource):
     def get(self, id):
